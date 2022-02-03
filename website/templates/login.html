@@ -1,5 +1,5 @@
 {% extends "base.html" %} {%block title %}Login{%endblock%} {%block content %}
-<form method="post">
+<form method="post" action="/login">
     <h3 align="center">Login page</h3>
     <!-- using a bootstrap class -->
     <div class="form-group">
@@ -13,8 +13,9 @@
     </div>
 
     <br />
-    <button type="submit" class="btn btn-primary">Submit</button>
-    <button type="forgot" class="btn btn-primary">Forgot Password</button>
+    <input type="submit" value="Login" name="action1" class="btn btn-primary" />
+    <input type="submit" value="Forget Password" name="action2" class="btn btn-primary" />
+
 </form>
 
 

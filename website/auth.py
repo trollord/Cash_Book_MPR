@@ -9,32 +9,49 @@ from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError
 from flask_login import login_user, logout_user, login_required, current_user
+from werkzeug.utils import secure_filename
+import os
+from .py_ocr import ocr as image_to_text
+
 auth = Blueprint('auth', __name__)
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def forgetpassword():
+    py.alert(text='', title='', button='OK')
 
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+
     # py.alert(text='', title='', button='OK')
     # data = request.form
     # print(data)
-    tries = 0
 
     if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
+        if request.form.get('action1') == 'Login':
+            email = request.form.get('email')
+            password = request.form.get('password')
 
-        user = User.query.filter_by(email=email).first()
-        if user:
-            if check_password_hash(user.password, password):
-                flash('Logged In Succesfully!!', category='success')
-                login_user(user, remember=True)
-                return redirect(url_for('views.home'))
+            user = User.query.filter_by(email=email).first()
+            if user:
+                if check_password_hash(user.password, password):
+                    flash('Logged In Succesfully!!', category='success')
+                    login_user(user, remember=True)
+                    return redirect(url_for('views.home'))
+                else:
+                    flash('Invalid Password.', category='error')
+
             else:
-                flash('Invalid Password.', category='error')
-
-        else:
-            flash('User Does not exist.', category='error')
-
+                flash('User Does not exist.', category='error')
+        elif request.form.get('action2') == 'Forget Password':
+            forgetpassword()
+            pass
     return render_template('login.html', user=current_user)
 
 
@@ -79,13 +96,39 @@ def sign_up():
                 db.session.rollback()
 
             # db.session.commit()
-            login_user(user, remember=True)
-            flash('User added successfully', category='success')
+            login_user(new_user, remember=True)
+            flash('Account created!', category='success')
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html", user=current_user)
 
 
+@auth.route('/Ocr', methods=['GET', 'POST'])
+def ocr():
+    return render_template('ocr.html', user=current_user)
 # @auth.route('/home')
 # def home():
 #     return render_template("home.html")
+
+
+@auth.route('/upload', methods=['POST'])
+def upload_image():
+    if 'file' not in request.files:
+        flash('No file part', category='error')
+        return redirect(request.url)
+    file = request.files['file']
+    if file.filename == '':
+        flash('No image selected for uploading', category='error')
+        return redirect(request.url)
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(
+            f"C:/Users/mskas/OneDrive/Desktop/py4e/.vscode/ML/New folder/flask Web app/website/test_ocr/{filename}")
+        #print('upload_image filename: ' + filename)
+        image_to_text(
+            f"C:/Users/mskas/OneDrive/Desktop/py4e/.vscode/ML/New folder/flask Web app/website/test_ocr/{filename}")
+        flash('Image successfully uploaded and displayed below', category='success')
+        return redirect(url_for('views.home'))
+    else:
+        flash('Allowed image types are -> png, jpg, jpeg, gif')
+        return redirect(request.url)

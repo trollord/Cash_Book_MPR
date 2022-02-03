@@ -1,4 +1,72 @@
-{% extends "base.html" %} {%block title %}Home{%endblock%} {%block content %}
-<h1>Home page</h1>
+{% extends "base.html" %} {%block title %}Home{%endblock%} {%block content%}
+<h1>Accounts</h1>
 
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Expense</th>
+            <th scope="col">Amt</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for note in user.notes %}
+        <tr>
+            <td></td>
+            <td>{{note.data}}</td>
+            <td>{{note.data_amt}}</td>
+            <form action="/delete" method="post">
+                <td><button type="Submit" class="btn btn-primary">Delete</button></td>
+                <input type="hidden" value="{{note.id}}" name="note_id">
+            </form>
+        </tr>
+        {% endfor %}
+
+
+
+    </tbody>
+</table>
+
+<style>
+    body {
+        counter-reset: Serial;
+        /* Set the Serial counter to 0 */
+    }
+    
+    table {
+        border-collapse: separate;
+    }
+    
+    input {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+    
+    tr td:first-child:before {
+        counter-increment: Serial;
+        /* Increment the Serial counter */
+        content: counter(Serial);
+        /* Display the counter */
+    }
+</style>
+
+
+<form method="POST">
+    <div style="display: flex;">
+        <input name="note" id="note" class="form-control" placeholder="Enter the expense">
+        <input name="amt" id="amt" style="width: 200px;" class="form-control" placeholder="Enter the amount">
+    </div>
+    <div align="right">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+<h1>{{sum}}</h1>
 {% endblock %}
