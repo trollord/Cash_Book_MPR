@@ -1,12 +1,22 @@
 {% extends "base.html" %} {%block title %}Home{%endblock%} {%block content%}
 <h1>Accounts</h1>
-
+<form method="POST">
+    <div style="display: flex;">
+        <input name="note" id="note" class="form-control" placeholder="Enter the expense">
+        <input name="amt" id="amt" style="width: 200px;" class="form-control" placeholder="Enter the amount">
+    </div>
+    <div align="right">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
 <table class="table table-hover">
     <thead>
         <tr>
-            <th scope="col">#</th>
+            <th scope="col">Sr.No</th>
             <th scope="col">Expense</th>
             <th scope="col">Amt</th>
+            <th scope="col">Date</th>
+            <th scope="col">Function</th>
         </tr>
     </thead>
     <tbody>
@@ -15,14 +25,13 @@
             <td></td>
             <td>{{note.data}}</td>
             <td>{{note.data_amt}}</td>
+            <td>{{note.date}}</td>
             <form action="/delete" method="post">
                 <td><button type="Submit" class="btn btn-primary">Delete</button></td>
                 <input type="hidden" value="{{note.id}}" name="note_id">
             </form>
         </tr>
         {% endfor %}
-
-
 
     </tbody>
 </table>
@@ -56,17 +65,10 @@
         content: counter(Serial);
         /* Display the counter */
     }
+    
+    .total_class {
+        margin-left: 750px;
+    }
 </style>
-
-
-<form method="POST">
-    <div style="display: flex;">
-        <input name="note" id="note" class="form-control" placeholder="Enter the expense">
-        <input name="amt" id="amt" style="width: 200px;" class="form-control" placeholder="Enter the amount">
-    </div>
-    <div align="right">
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-</form>
-<h1>{{sum}}</h1>
+<h3 class="total_class">Total Expenditure {{sum}}</h3>
 {% endblock %}

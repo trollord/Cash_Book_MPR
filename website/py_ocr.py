@@ -5,7 +5,6 @@ from flask import flash
 
 
 def ocr(imageFile):
-    print("..........Getting your bill details.........")
     receiptOcrEndpoint = 'https://ocr.asprise.com/api/v1/receipt'
     # imageFile = "bill.jpg"
     r = requests.post(receiptOcrEndpoint, data={
@@ -16,8 +15,14 @@ def ocr(imageFile):
         files={"file": open(imageFile, "rb")})
     r = r.json()
     # print(r)
-    amt = int(r['receipts'][0]['total'])
-    note = r['receipts'][0]['merchant_name']
+    try:
+        amt = int(r['receipts'][0]['total'])
+    except:
+        amt = 0
+    try:
+        note = r['receipts'][0]['merchant_name']
+    except:
+        note = "NULL"
     new_note = Note(data=note, user_id=current_user.id, data_amt=amt)
     db.session.add(new_note)
     db.session.commit()

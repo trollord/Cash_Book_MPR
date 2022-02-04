@@ -13,7 +13,7 @@ c = 0
 def sum_data_amt(user):
     sum = 0
     for note in user.notes:
-        sum += note.data_amt
+        sum += int(note.data_amt)
     return sum
 
 

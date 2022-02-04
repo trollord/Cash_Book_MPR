@@ -23,7 +23,15 @@ def allowed_file(filename):
 
 
 def forgetpassword():
-    py.alert(text='', title='', button='OK')
+    # py.alert(text='', title='', button='OK')
+    py.prompt(
+        text='', title='Enter the Access key sent to your Email/phone', default='')
+    # use tkinter or pyqt insted of pyautogui
+    # email verification using the same access key
+    # gui for entering email and keyy
+    # enter the key and validate if validated
+    #
+    # redirect to login page
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -39,9 +47,11 @@ def login():
             password = request.form.get('password')
 
             user = User.query.filter_by(email=email).first()
+
             if user:
                 if check_password_hash(user.password, password):
-                    flash('Logged In Succesfully!!', category='success')
+                    flash(f"{user.first_name} has been logged In Succesfully!!",
+                          category='success')
                     login_user(user, remember=True)
                     return redirect(url_for('views.home'))
                 else:
@@ -127,7 +137,7 @@ def upload_image():
         #print('upload_image filename: ' + filename)
         image_to_text(
             f"C:/Users/mskas/OneDrive/Desktop/py4e/.vscode/ML/New folder/flask Web app/website/test_ocr/{filename}")
-        flash('Image successfully uploaded and displayed below', category='success')
+        # flash('Image successfully uploaded and displayed below', category='success')
         return redirect(url_for('views.home'))
     else:
         flash('Allowed image types are -> png, jpg, jpeg, gif')
