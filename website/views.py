@@ -42,19 +42,6 @@ def home():
             db.session.add(new_note)
             db.session.commit()
             flash("Expense added succesfully ! ", category='success')
-        # user = User.query.all()
-        # for i in user:
-        #     print(i.first_name)
-        #     print(i.email)
-        #     print(i.password)
-        #     print(i.id)
-        # user2 = Note.query.all()
-        # for i in user2:
-        #     print(i.data)
-        #     print(i.data_amt)
-        #     print(i.label)
-        # # print(User.query.all())
-        # print(Note.query.all())
 
     return render_template("home.html", user=current_user, sum=sum_data_amt(current_user))
 

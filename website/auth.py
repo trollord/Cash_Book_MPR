@@ -12,7 +12,8 @@ from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 import os
 from .py_ocr import ocr as image_to_text
-
+from .webcam import theft_detection as cam
+from .Pyt_mailer import send_mail
 auth = Blueprint('auth', __name__)
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
@@ -26,12 +27,15 @@ def forgetpassword():
     # py.alert(text='', title='', button='OK')
     py.prompt(
         text='', title='Enter the Access key sent to your Email/phone', default='')
+
     # use tkinter or pyqt insted of pyautogui
     # email verification using the same access key
     # gui for entering email and keyy
     # enter the key and validate if validated
     #
     # redirect to login page
+
+
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -56,6 +60,8 @@ def login():
                     login_user(user, remember=True)
                     return redirect(url_for('views.home'))
                 else:
+                    cam()
+                    send_mail(email, 'Intruder Alert!')
                     flash('Invalid Password.', category='error')
 
             else:
@@ -63,20 +69,20 @@ def login():
         elif request.form.get('action2') == 'Forget Password':
             forgetpassword()
             pass
-    user = User.query.all()
-    for i in user:
-        print(i.first_name)
-        print(i.email)
-        print(i.password)
-        print(i.id)
-    user2 = Note.query.all()
-    for i in user2:
-        print(i.data)
-        print(i.data_amt)
-        print(i.date)
-        print(i.user_id)
-    print(User.query.all())
-    print(Note.query.all())
+    # user = User.query.all()
+    # for i in user:
+    #     print(i.first_name)
+    #     print(i.email)
+    #     print(i.password)
+    #     print(i.id)
+    # user2 = Note.query.all()
+    # for i in user2:
+    #     print(i.data)
+    #     print(i.data_amt)
+    #     print(i.date)
+    #     print(i.user_id)
+    # print(User.query.all())
+    # print(Note.query.all())
     return render_template('login.html', user=current_user)
 
 
