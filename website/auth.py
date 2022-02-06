@@ -4,7 +4,7 @@ from unicodedata import name
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from matplotlib.style import use
 import pyautogui as py
-from .models import User
+from .models import User, Note
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError
@@ -42,6 +42,7 @@ def login():
     # print(data)
 
     if request.method == 'POST':
+
         if request.form.get('action1') == 'Login':
             email = request.form.get('email')
             password = request.form.get('password')
@@ -62,6 +63,20 @@ def login():
         elif request.form.get('action2') == 'Forget Password':
             forgetpassword()
             pass
+    user = User.query.all()
+    for i in user:
+        print(i.first_name)
+        print(i.email)
+        print(i.password)
+        print(i.id)
+    user2 = Note.query.all()
+    for i in user2:
+        print(i.data)
+        print(i.data_amt)
+        print(i.date)
+        print(i.user_id)
+    print(User.query.all())
+    print(Note.query.all())
     return render_template('login.html', user=current_user)
 
 
